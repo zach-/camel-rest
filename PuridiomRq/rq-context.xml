@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+ 	<bean id = "sampleRESTRoute" class="com.tsa.puridiom.rq.router.SampleRESTRoute"/>
+	<!-- <import resource="classpath*:/META-INF/spring/db-context.xml" /> -->
+<!-- 
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:puridiom.properties</value>
+			</list>
+		</property>
+	</bean>
+-->	
+   <!-- <bean id = "messageResponse" class="com.tsa.puridiom.cd.message.MessageResponse"/> -->
+   <bean id = "messageTranslator" class="com.tsa.puridiom.cd.message.MessageTranslator"/>
+   <!-- <bean id = "messageSecurity" class="com.tsa.puridiom.cd.message.MessageSecurity"/>
+   <bean id = "messageAuthorizationRoute" class="com.tsa.puridiom.cd.message.MessageAuthorizationRoute"/>
+   <bean id = "exceptionHandler" class="com.tsa.puridiom.cd.exception.ExceptionHandler"/>
+   
+   <bean id = "requisitionInitialize" class="com.tsa.puridiom.rq.initialization.RequisitionInitialize"/>
+   <bean id = "requisitionManager" class="com.tsa.puridiom.rq.managers.RequisitionManager"/> -->
+   
+<!-- Requisition Header -->
+  <!--  <bean id = "requisitionBuyerAssignRoute" class="com.tsa.puridiom.rq.router.RequisitionBuyerAssignRoute"/>
+   <bean id = "requisitionOpenRoute" class="com.tsa.puridiom.rq.router.RequisitionOpenRoute"/>
+
+   <bean id = "requisitionGetCacheRoute" class="com.tsa.puridiom.rq.router.RequisitionGetCacheRoute"/>
+   <bean id = "requisitionPutCacheRoute" class="com.tsa.puridiom.rq.router.RequisitionPutCacheRoute"/>
+   <bean id = "requisitionSaveObjectCacheRoute" class="com.tsa.puridiom.rq.router.RequisitionSaveObjectCacheRoute"/>
+   <bean id = "requisitionPutLineAndGetCacheRoute" class="com.tsa.puridiom.rq.router.RequisitionPutLineAndGetCacheRoute"/>
+   <bean id = "requisitionTypesListRoute" class="com.tsa.puridiom.rq.router.RequisitionTypesListRoute"/>
+   
+   <bean id = "requisitionRecentRoute" class="com.tsa.puridiom.rq.router.RequisitionRecentRoute"/>
+   <bean id = "requisitionCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionCreateRoute"/>
+   <bean id = "requisitionCreateFromPoRoute" class="com.tsa.puridiom.rq.router.RequisitionCreateFromPoRoute"/>
+   <bean id = "requisitionSaveRoute" class="com.tsa.puridiom.rq.router.RequisitionSaveRoute"/>
+   <bean id = "requisitionDeleteRoute" class="com.tsa.puridiom.rq.router.RequisitionDeleteRoute"/>
+   
+   <bean id = "requisitionRoutingRoute" class="com.tsa.puridiom.rq.router.RequisitionRoutingRoute"/>
+   <bean id = "requisitionForwardRoute" class="com.tsa.puridiom.rq.router.RequisitionForwardRoute"/>
+   <bean id = "requisitionApproveRoute" class="com.tsa.puridiom.rq.router.RequisitionApproveRoute"/>
+   <bean id = "requisitionValidateRoute" class="com.tsa.puridiom.rq.router.RequisitionValidateRoute"/>
+   <bean id = "requisitionValidateByElementRoute" class="com.tsa.puridiom.rq.router.RequisitionValidateByElementRoute"/>
+   <bean id = "documentUploadRoute" class="com.tsa.puridiom.cd.router.DocumentUploadRoute"/>
+
+Requisition Line   
+   <bean id = "requisitionLineCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionLineCreateRoute"/>
+   <bean id = "requisitionLineSaveRoute" class="com.tsa.puridiom.rq.router.RequisitionLineSaveRoute"/>
+   <bean id = "requisitionLineDeleteRoute" class="com.tsa.puridiom.rq.router.RequisitionLineDeleteRoute"/>
+   Account
+   <bean id = "requisitionAccountCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionAccountCreateRoute"/>
+   <bean id = "requisitionAccountCreateFromRoute" class="com.tsa.puridiom.rq.router.RequisitionAccountCreateFromRoute"/>
+   ShipTo
+   <bean id = "requisitionShipToCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionShipToCreateRoute"/>
+   Attachment   
+   <bean id = "requisitionAttachmentCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionAttachmentCreateRoute"/>
+   Comment
+   <bean id = "requisitionCommentCreateRoute" class="com.tsa.puridiom.rq.router.RequisitionCommentCreateRoute"/>
+catalog
+	<bean id = "browseItemCatalogsRoute" class="com.tsa.puridiom.br.router.BrowseItemCatalogsRoute"/>
+	<bean id = "requisitionLineCreateFromRoute" class="com.tsa.puridiom.rq.router.RequisitionLineCreateFromRoute"/>
+tags	
+	<bean id = "requisitionCreateTagRoute" class="com.tsa.puridiom.rq.router.RequisitionCreateTagRoute"/>
+
+   <bean id = "requisitionAutoAwardRoute" class="com.tsa.puridiom.rq.router.RequisitionAutoAwardRoute"/>
+
+Account Summary
+	<bean id="requisitionAccountSummaryRoute" class="com.tsa.puridiom.rq.router.RequisitionAccountSummaryRoute"/>
+
+   <bean id = "pgLoadRoute" class="com.tsa.puridiom.pg.router.PgLoadRoute"/>
+   
+   <bean id="pageManager" class="com.tsa.puridiom.pg.managers.PageManager"/>
+   <bean id="pageConverter" class="com.tsa.puridiom.pg.page.PageConverter"/>
+   
+  Po
+	<bean id="browsePoForReqRoute" class="com.tsa.puridiom.br.router.BrowsePoForReqRoute"/>
+ -->
+   
+ 
+  <camelContext id="requisitionContext" xmlns="http://camel.apache.org/schema/spring" autoStartup="true">
+	 <onException>
+	    <exception>java.lang.Exception</exception>
+	    <!-- there can be more just add a 2nd, 3rd exception element (unbounded) -->
+	    <!--  <exception>org.apache.camel.spring.processor.onexception.OrderFailedException</exception> -->
+	    <!-- we can set the redelivery policy here as well -->
+	    <redeliveryPolicy maximumRedeliveries="0" />
+	    <!-- mark this as handled -->
+	    <handled>
+	      <constant>true</constant>
+	    </handled>
+	    <!-- <bean ref="exceptionHandler" method="handleException" /> -->
+	    <to uri="direct:errorResponse"/>
+	  </onException>
+  
+<!--     <route id="requisitionRequestFile">
+    	 Puridiom Request Queue
+      <from uri="file:src/data"/>
+      		<to uri="direct-vm:requisitionManager"/>
+	      	<to uri="file:src/data/out"/>
+    </route> -->
+    <route id="requisitionRequestDirectVm">
+    	<!--  Puridiom Request Queue -->
+      <from uri="direct-vm:requisitionManager"/>
+		<!-- 	<bean ref="requisitionInitialize"/>
+      		<bean ref="messageTranslator" method="translateRequest"/>
+      		<bean ref="messageSecurity"/>
+      		<bean ref="messageAuthorizationRoute"/>
+      		<bean ref="pageConverter"/> -->
+<!--       		<bean ref="requisitionManager"/> -->
+			<bean ref="sampleRESTRoute"/>
+      		<choice>
+      			<when>
+      				<simple>${in.header[CamelHttpMethod]} == 'GET'</simple>
+      				<bean ref="sampleRESTRoute" method="get"/>
+      			</when>
+      			<when>
+      				<simple>${in.header[CamelHttpMethod]} == 'POST'</simple>
+      				<bean ref="sampleRESTRoute" method="post"/>
+      			</when>
+      			<when>
+      				<simple>${in.header[CamelHttpMethod]} == 'PUT'</simple>
+      				<bean ref="sampleRESTRoute" method="put"/>
+      			</when>
+      			<when>
+      				<simple>${in.header[CamelHttpMethod]} == 'DELETE'</simple>
+      				<bean ref="sampleRESTRoute" method="delete"/>
+      			</when>
+      			
+      			
+      			<!-- <when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'REST'</simple>
+      				<bean ref="sampleRESTRoute"/>
+      			</when> -->
+      			<!-- <when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'open'</simple>
+      				<bean ref="requisitionOpenRoute"/>
+      				<bean ref="requisitionRecentRoute"/>
+					Route for set the account summary in RequisitionObject
+					<bean ref="requisitionAccountSummaryRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'getTypes'</simple>
+      				<bean ref="requisitionTypesListRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'recentDocument'</simple>
+      				<bean ref="documentRecentBrowseRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} regex '^(objectSaveCache).*$'</simple>
+      				<bean ref="requisitionSaveObjectCacheRoute"/>
+      				<bean ref="requisitionAccountSummaryRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} regex '^(getCache).*$'</simple>
+      				<bean ref="requisitionGetCacheRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} regex '^(putCache).*$'</simple>
+      				<bean ref="requisitionPutCacheRoute"/>
+					Route for set the account summary in RequisitionObject
+					<bean ref="requisitionAccountSummaryRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'updatePutLineAndGetCache' </simple>
+      				<bean ref="requisitionPutLineAndGetCacheRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'create'</simple>
+      				<bean ref="requisitionCreateRoute"/>
+      			</when>
+				<when>
+					<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createFromPo'</simple>
+					<bean ref="requisitionCreateFromPoRoute"/>
+					Route for set the account summary in RequisitionObject
+					<bean ref="requisitionAccountSummaryRoute"/>
+				</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} regex '^(save).*$'</simple>
+      				<bean ref="requisitionRecentRoute"/>
+      				<bean ref="requisitionSaveRoute"/>
+					Route for set the account summary in RequisitionObject
+					<bean ref="requisitionAccountSummaryRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} regex '^(delete).*$'</simple>
+      				<bean ref="requisitionDeleteRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'routing'</simple>
+      				<bean ref="requisitionRoutingRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'forward'</simple>
+      				<bean ref="requisitionForwardRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'approve'</simple>
+      				<bean ref="requisitionApproveRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'assignByHeader'</simple>
+      				<bean ref="requisitionBuyerAssignRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createLine'</simple>
+      				<bean ref="requisitionLineCreateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createAccount'</simple>
+      				<bean ref="requisitionAccountCreateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createAccountFrom'</simple>
+      				<bean ref="requisitionAccountCreateFromRoute"/>
+      				<bean ref="requisitionAccountSummaryRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createShipTo'</simple>
+      				<bean ref="requisitionShipToCreateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createComment'</simple>
+      				<bean ref="requisitionCommentCreateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createLineFromCatalog'</simple>
+      				<bean ref="requisitionLineCreateFromRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createTag'</simple>
+      				<bean ref="requisitionCreateTagRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'setLine'</simple>
+      				<bean ref="requisitionLineSaveRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'deleteLine'</simple>
+      				<bean ref="requisitionLineDeleteRoute"/>
+      			</when>
+				<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'createAttachment'</simple>
+      				<bean ref="requisitionAttachmentCreateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'getItemCatalogs'</simple>
+      				<bean ref="browseItemCatalogsRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'getPoForReq'</simple>
+      				<bean ref="browsePoForReqRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'validate'</simple>
+      				<bean ref="requisitionValidateRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'validateByElement'</simple>
+      				<bean ref="requisitionValidateByElementRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'uploadFile'</simple>
+      				<bean ref="documentUploadRoute"/>
+      			</when>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getService} == 'autoAward'</simple>
+      				<bean ref="requisitionAutoAwardRoute"/>
+      			</when> -->
+			</choice>
+      		<!-- <choice>
+      			<when>
+      				<simple>${in.body.getRequestObject.getRequestHeader.getPageId} != null and ${in.body.getRequestObject.getRequestHeader.getPageId} != ''</simple>
+      				<bean ref="pgLoadRoute"/>
+      			</when>
+			</choice>
+			<bean ref="messageTranslator" method="translateResponse"/>
+      		<to uri="vm:adminServiceMonitor"/>
+			<bean ref="messageResponse"/> -->
+    </route>
+    <route id="errorResponseDirect">
+      <from uri="direct:errorResponse"/>
+      		<bean ref="messageTranslator" method="translateResponse"/>
+			<!-- <bean ref="messageResponse"/> -->
+    </route>
+    
+  </camelContext>
+</beans>

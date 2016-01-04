@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+		http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+<!-- 
+	<import resource="classpath*:/META-INF/spring/db-context.xml" />
+-->	
+<!-- 
+	<bean id="log4jInitialization"
+	 class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	   <property name="targetClass"
+	      value="org.springframework.util.Log4jConfigurer" />
+	   <property name="targetMethod" value="initLogging" />
+	   <property name="arguments">
+	      <list>
+	         <value>classpath*:${PURIDIOM_CONFIG}log4j.properties</value>
+	      </list>
+	   </property>
+	</bean>
+	
+-->	
+<!-- 
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:puridiom.properties</value>
+			</list>
+		</property>
+	</bean>
+-->
+	
+	<context:property-placeholder location="classpath*:log4j.properties" 
+                                  ignore-unresolvable="true" ignore-resource-not-found="true" />
+    <context:property-placeholder location="classpath*:puridiom.properties" 
+									ignore-unresolvable="true" ignore-resource-not-found="true" />                                 
+
+                                  
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
+    
+	<cxf:rsServer id="rsServer" address="http://localhost:8081/CxfRsRouterTest/route"
+    serviceClass="com.tsa.puridiom.jms.RestService" 
+    loggingFeatureEnabled="true" loggingSizeLimit="20"  skipFaultLogging="true">
+    	<cxf:providers>
+    			<ref bean="jsonProvider" />
+    	</cxf:providers>
+    </cxf:rsServer>   
+                               
+	<bean id="jmsConnectionFactory" 
+	   class="org.apache.activemq.ActiveMQConnectionFactory">
+	   <property name="brokerURL" value="${jms.brokerUrl}" />
+	</bean>
+	
+	<bean id="pooledConnectionFactory" 
+	   class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+	   <property name="maxConnections" value="8" />
+	   <property name="idleTimeout" value="0"/>
+	   <property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConfig" 
+	   class="org.apache.camel.component.jms.JmsConfiguration">
+	   <property name="connectionFactory" ref="pooledConnectionFactory"/>
+	   <property name="concurrentConsumers" value="10"/>
+	</bean>
+	
+	<bean id="activemq" 
+	    class="org.apache.activemq.camel.component.ActiveMQComponent">
+	    <property name="configuration" ref="jmsConfig"/>
+	</bean>
+
+    <!-- bean id="mailService" class="com.tsa.puridiom.cd.mail.MailService" / -->
+
+  <!-- This creates an embedded ActiveMQ Broker -->
+<!--   
+  <broker xmlns="http://activemq.apache.org/schema/core" useJmx="true" persistent="false">
+    <transportConnectors>
+      <transportConnector uri="${jms.brokerUrl}" />
+    </transportConnectors>
+  </broker>
+  -->
+  
+  <!-- Lets connect the Camel ActiveMQ component to the embedded broker.
+       See http://camel.apache.org/activemq.html for more information.
+  -->
+<!--  
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="brokerURL" value="failover:tcp://localhost:61616"/>
+  </bean>
+-->
+  <bean id="camelTracer" class="org.apache.camel.processor.interceptor.Tracer">
+    <property name="traceExceptions" value="false"/>
+    <property name="traceInterceptors" value="true"/>
+    <property name="logLevel" value="TRACE"/>
+    <property name="logName" value="com.mycompany.messages"/>
+  </bean>
+   
+  <camelContext xmlns="http://camel.apache.org/schema/spring" id="jmsContext" trace="true">
+    <!-- endpoint  id="mailUri"  uri="${smtp.url}?username=${smtp.username}&amp;password=${smtp.password}&amp;debugMode=true&amp;connectionTimeout=120000"/ -->
+    
+	<route>
+		<from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer"/>
+			<removeHeader headerName="Content-Length" />
+			<to uri="direct-vm:requisitionManager"/>
+			<!-- <inOut uri="mock:result"/> -->
+	</route>
+    
+	<route>
+		<from uri="file:src/data/authentication"/>
+			<to uri="activemq:authenticationQueue"/>
+	</route>
+	<route>
+		<from uri="file:src/data/process"/>
+			<to uri="activemq:processQueue"/>
+	</route>
+	<route>
+		<from uri="file:src/data/cd"/>
+			<to uri="activemq:cdQueue"/>
+	</route>
+    <route>
+    	<!--  Puridiom Request Queue -->
+      <from uri="file:src/data/requisition"/>
+      		<to uri="activemq:requisitionQueue"/>
+      		
+    </route>
+    <route>
+    	<!--  Puridiom Order Queue -->
+      <from uri="file:src/data/po"/>
+      		<to uri="activemq:orderQueue"/>
+      		
+    </route>
+	<route>
+		<!--  Puridiom Receipt Queue -->
+		<from uri="file:src/data/receipt"/>
+			<to uri="activemq:receiptQueue"/>
+	</route>
+	<route>
+		<!--  Puridiom Invoice Queue -->
+		<from uri="file:src/data/invoice"/>
+			<to uri="activemq:invoiceQueue"/>
+	</route>
+	<route>
+		<!--  Puridiom Inventory Queue -->
+		<from uri="file:src/data/inventory"/>
+			<to uri="activemq:inventoryQueue"/>
+	</route>
+    <route>
+    	<!--  Puridiom Page Queue -->
+      <from uri="file:src/data/page"/>
+      		<to uri="activemq:pageQueue"/>
+      		
+    </route>
+    <route>
+      <from uri="file:src/data/table"/>
+      		<to uri="activemq:tableQueue"/>
+    </route>
+    <route>
+      <from uri="file:src/data/browse"/>
+      		<to uri="activemq:browseQueue"/>
+    </route>
+    <route>
+      <from uri="file:src/data/validationrule"/>
+      		<to uri="activemq:validationruleQueue"/>
+    </route>
+	<route>
+		<from uri="file:src/data/userprofile"/>
+			<to uri="activemq:userQueue"/>
+	</route>
+
+	<route>
+		<from uri="activemq:authenticationQueue"/>
+			<to uri="direct-vm:authenticationManager"/>
+	</route>
+	<route>
+		<from uri="activemq:processQueue"/>
+			<to uri="direct-vm:processManager"/>
+	</route>
+	<route>
+		<from uri="activemq:cdQueue"/>
+			<to uri="direct-vm:cdManager"/>
+	</route>
+    <route>
+    	<!--  Puridiom Request Queue -->
+      <from uri="activemq:requisitionQueue"/>
+      		<to uri="direct-vm:requisitionManager"/>
+    </route>
+    <route>
+    	<from uri="activemq:msrQueue"/>
+    		<to uri="direct-vm:msrManager"/>
+    </route>
+    <route>
+      <from uri="activemq:orderQueue"/>
+      		<to uri="direct-vm:poManager"/>
+    </route>
+	<route>
+		<from uri="activemq:receiptQueue"/>
+			<to uri="direct-vm:receiptManager"/>
+	</route>
+	<route>
+		<from uri="activemq:invoiceQueue"/>
+			<to uri="direct-vm:invoiceManager"/>
+	</route>
+	<route>
+		<from uri="activemq:inventoryQueue"/>
+			<to uri="direct-vm:inventoryManager"/>
+	</route>
+    <route>
+      <from uri="activemq:pageQueue"/>
+      		<to uri="direct-vm:pageManager"/>
+    </route>
+    <route>
+      <from uri="activemq:tableQueue"/>
+      		<to uri="direct-vm:tableManager"/>
+    </route>
+    <route>
+      <from uri="activemq:browseQueue"/>
+      		<to uri="direct-vm:browseManager"/>
+    </route>
+    <route>
+      <from uri="activemq:validationruleQueue"/>
+      		<to uri="direct-vm:validationRuleManager"/>
+    </route>
+	<route>
+		<from uri="activemq:userQueue"/>
+			<to uri="direct-vm:userProfileManager"/>
+	</route>
+    <!-- route>
+      <from uri="file:src/data/mail"/>
+      		<to uri="activemq:mailQueue"/>      		
+    </route -->    
+   <!-- route>
+      <from uri="activemq:mailQueue"/>
+      <bean ref="mailService" />
+      <to uri="ref:mailUri" />   
+    </route -->    
+    
+  </camelContext>
+
+</beans>
